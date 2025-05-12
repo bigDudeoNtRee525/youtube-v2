@@ -1,4 +1,3 @@
-
 import asyncio
 from apify import Actor
 from playwright.async_api import async_playwright
@@ -58,8 +57,12 @@ async def main():
         keywords = input_data.get("keywords", ["top saas tools 2024"])
         results_per_keyword = input_data.get("resultsPerKeyword", 100)
 
+        proxy_url = Actor.apify_proxy.get_url()  # 🔐 Enables Apify Proxy
         async with async_playwright() as p:
-            browser = await p.chromium.launch(headless=True)
+            browser = await p.chromium.launch(
+                headless=True,
+                proxy={"server": proxy_url}
+            )
             page = await browser.new_page()
 
             all_results = []
